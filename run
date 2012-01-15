@@ -1,0 +1,67 @@
+#!/bin/bash
+
+if		[ ! -n $1 ]
+then	echo "File Name Required. Aborting."
+		exit 1
+else	if 	[ ! -f $1.l ]
+			then	echo "$1.l not found. Aborting."
+					exit 1
+			else 	echo "Checking for previous flex build."
+					if	[ -f lex.yy.c ]
+						then	echo "Previous flex build found."
+								rm lex.yy.c
+								echo "Deleted."
+						else	echo "No previous build found."
+					fi
+					echo "Processing $1.l using Flex."
+					flex $1.l
+					if	[ -f lex.yy.c ]
+						then	echo "Success."
+						else 	echo "Error. Process Failed. Aborting."
+						exit 1
+					fi
+		fi
+
+
+		if 	[ ! -f $1.y ]
+			then	echo "$1.y not found. Aborting."
+					exit 1
+			else 	echo "Checking for previous Yacc build."
+					if	[ -f $1.tab.c ]
+						then	echo "Previous Yacc build found."
+								rm $1.tab.c
+								echo "Deleted."
+					fi
+					if	[ -f y.tab.h ]
+						then	echo "Previous Yacc build found."
+								rm y.tab.h
+								echo "Deleted."
+					fi
+					echo "Processing $1.y using Bison."
+					bison --defines=y.tab.h $1.y
+					if	[ -f $1.tab.c ] && [ -f y.tab.h ]
+						then	echo "Success."
+						else 	echo "Error. Process Failed. Aborting."
+								exit 1
+					fi
+		fi
+
+		echo "Checking for previous Executable."
+		if	[ -f a.out ]
+			then	echo "Previous executable found, Deleting."
+					rm a.out
+					if	[ ! -f a.out ]
+						then	echo "Deleted."
+						else	echo "Unable to Delete. Check file permissions."
+					fi
+		fi
+		echo "Compiling source code."
+		gcc lex.yy.c $1.tab.c
+		if	[ -f a.out ]
+			then	echo "Success."
+					echo  "Running the executable."
+					./a.out
+			else	echo "Error. Process Failed. Aborting."
+					exit 1
+		fi
+fi
