@@ -82,7 +82,11 @@ else	if 	[ ! -f $1.l ]
 		if	[ -f a.out ]
 			then	echo "Success."
 					echo  "Running the executable."
-					./a.out $2
+					if test -z "$2"
+						./a.out $2
+					else
+						./a.out
+					fi
 			else	echo "Error. Process Failed. Aborting."
 					exit 1
 		fi
