@@ -83,6 +83,7 @@ else	if 	[ ! -f $1.l ]
 			then	echo "Success."
 					echo  "Running the executable."
 					if test -z "$2"
+					then
 						./a.out $2
 					else
 						./a.out
