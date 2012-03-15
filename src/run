@@ -60,9 +60,10 @@ else	if 	[ ! -f $1.l ]
 					fi
 					echo "Processing $1.y using Bison."
 					bison --defines=y.tab.h $1.y
+					echo "Processed using Bison"
 					if	[ -f $1.tab.c ] && [ -f y.tab.h ]
 						then	echo "Success."
-						else 	echo "Error. Process Failed. Aborting."
+						else 	echo "Error. Process Failed. Aborting:|"
 								exit 1
 					fi
 		fi
@@ -77,11 +78,11 @@ else	if 	[ ! -f $1.l ]
 					fi
 		fi
 		echo "Compiling source code."
-		gcc lex.yy.c $1.tab.c
+		gcc-4.6 lex.yy.c $1.tab.c
 		if	[ -f a.out ]
 			then	echo "Success."
 					echo  "Running the executable."
-					./a.out
+					./a.out $2
 			else	echo "Error. Process Failed. Aborting."
 					exit 1
 		fi
